@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Text1文件上传</title>
+		<style>
+			*{
+				margin: 0;
+			}
+			.progress{
+				width: 200px;
+				height: 20px;
+				background: #ddd;
+				position: relative;
+			}
+			.info{
+				width:0px;
+				height: 20px;
+				background: #ec5710;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+
+		</style>
+		<script type="text/javascript" src="js/jquery-1.11.0.js" ></script>
+	</head>
+	<body style="margin: 50px;">
+		<input type="file" id="file" name="file" multiple="multiple"  />
+
+		<div class="progress">
+			<div class="info" id="info">
+			</div>
+		</div>
+
+		<div id="result">
+
+		</div>
+
+		<input type="submit" id="btn" />
+
+
+		<script>
+			var oFlie = document.getElementById("file")
+			var oBtn = document.getElementById("btn")
+			var oRes = document.getElementById("result")
+			var oImg = document.getElementsByTagName("img")
+			var oInfo = document.getElementById("info")
+			oBtn.onclick = function(){
+
+				var fs = oFlie.files[0]
+				var reader = new FileReader(fs)
+
+
+				reader.onprogress = function(e){
+
+					oInfo.style.width= e.loaded/e.total*200+"px"
+					oRes.innerHTML = Math.round((e.loaded/e.total*200)*0.5)+"%"
+				}
+
+				reader.onload = function(){
+
+					var data = new FormData()
+					data.append("file",fs)
+
+
+					$.ajax({
+						type:"post",
+						url:"api/test.php",
+						async:true,
+						data:{
+							data:data
+						},
+						processData:false,
+						contentType:false,
+						success:function(res){
+							console.log(res)
+						}
+					});
+
+
+				}
+
+
+				reader.readAsDataURL(fs)
+
+			}
+
+		</script>
+	</body>
+</html>
